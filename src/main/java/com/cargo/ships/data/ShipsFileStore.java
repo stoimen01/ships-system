@@ -17,7 +17,8 @@ import static java.util.stream.Collectors.*;
 
 /**
  * This class implements {@link ShipsStore} by using data from JSON
- * file contained in the resources directory.
+ * file contained in the resources directory. The path to he file is
+ * injected by {@link ShipsProperties} object.
  *
  * It uses {@link ObjectMapper} to deserialize the file.
  *
