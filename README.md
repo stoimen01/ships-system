@@ -1,9 +1,13 @@
 # ships-system
 
-## build and run
-
 This repository contains Spring Boot project containing simple server  
 which goal is to provide ships information from static JSON file (located in the resources folder).
+
+## build and run
+
+Prerequisites:
+- Java 8
+- Gradle 4.*
 
 In order to build and run the server one must execute the following command from this directory: 
 
