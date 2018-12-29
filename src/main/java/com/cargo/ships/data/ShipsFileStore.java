@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Repository;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import static java.util.Arrays.*;
@@ -34,7 +34,7 @@ public class ShipsFileStore implements ShipsStore {
 
     /**
      * Initializes {@link #shipsMap} containing all ships by id
-     * from json file located by {@link ShipsProperties#getPath()}.
+     * from json file located by {@link ShipsProperties#getShipsFileName()}.
      *
      * @param props the properties to be used for access to the file path
      *
@@ -48,16 +48,17 @@ public class ShipsFileStore implements ShipsStore {
             throw new IllegalArgumentException("ShipsProperties must not be null !");
         }
 
-        String path = props.getPath();
+        String fileName = props.getShipsFileName();
 
-        if (path == null || !path.endsWith(".json")) {
+        if (fileName == null || !fileName.endsWith(".json")) {
             throw new IllegalArgumentException("Path must not be null and must end with .json suffix !");
         }
 
         try {
-            File file = new ClassPathResource(path).getFile();
+            ClassPathResource classPathResource = new ClassPathResource(fileName);
+            InputStream inputStream = classPathResource.getInputStream();
             final ObjectMapper mapper = new ObjectMapper();
-            Ship[] ships = mapper.readValue(file, ShipsWrapper.class).getShips();
+            Ship[] ships = mapper.readValue(inputStream, ShipsWrapper.class).getShips();
             this.shipsMap = stream(ships).collect(toConcurrentMap(Ship::getId, s -> s));
         } catch (JsonParseException|JsonMappingException e) {
             throw new IllegalArgumentException("File must contain valid JSON structure !");

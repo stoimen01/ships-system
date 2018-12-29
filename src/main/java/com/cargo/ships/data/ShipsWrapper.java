@@ -5,7 +5,7 @@ import com.cargo.ships.domain.Ship;
 
 /**
  * This class is used for deserialization of the JSON data contained in
- * the JSON file pointed by {@link ShipsProperties#getPath()}.
+ * the JSON file pointed by {@link ShipsProperties#getShipsFileName()}.
  *
  * @author Stoimen Stoimenov
  */

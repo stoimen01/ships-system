@@ -11,21 +11,21 @@ import javax.validation.constraints.Pattern;
  * used for providing information about the location of the ships JSON file.
  *
  * The property should be set in the application.properties file
- * and the JSON file must be located at a path relative to the resources directory.
+ * and the JSON file must be located at a shipsFileName relative to the resources directory.
  */
 @ConfigurationProperties(prefix = "app.ships")
 @Validated
 public class ShipsProperties {
 
     @Pattern(regexp = ".+(\\.json)$")
-    private String path;
+    private String shipsFileName;
 
-    public String getPath() {
-        return path;
+    public String getShipsFileName() {
+        return shipsFileName;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setShipsFileName(String shipsFileName) {
+        this.shipsFileName = shipsFileName;
     }
 
 }

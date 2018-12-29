@@ -36,7 +36,7 @@ public class ShipsFileStoreTest {
         @Bean
         public ShipsStore store() throws IOException {
             ShipsProperties props = new ShipsProperties();
-            props.setPath("ships.json");
+            props.setShipsFileName("ships.json");
             return new ShipsFileStore(props);
         }
     }
