@@ -1,7 +1,6 @@
 package com.cargo.ships;
 
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.ReadContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
@@ -18,11 +17,13 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.io.File;
 
+import static com.cargo.ships.ShipsTestUtil.filterJsonShipsByOwner;
+import static com.cargo.ships.ShipsTestUtil.findJsonShipById;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.*;
 
 /**
  * The goal of the following tests is to ensure that the different endpoints
- * are returning behaving accordingly and return correct data in real conditions.
+ * are behaving accordingly and return correct data in real conditions.
  *
  * In order to achieve the goals real web server is used and all
  * data assertions are done against the original json resource file.
@@ -82,18 +83,28 @@ public class ShipsApplicationTests {
                 .returnResult()
                 .getResponseBody();
 
-        JSONArray expected = new JSONArray();
-
-        // filtering out the ships not owned by the owner
-        for (int i = 0; i < allShips.length(); i++) {
-            JSONObject ship = allShips.getJSONObject(i);
-            if (ship.getString("owner").equals(owner)) {
-                expected.put(ship);
-            }
-        }
-
+        JSONArray expected = filterJsonShipsByOwner(allShips, owner);
         JSONArray data = new JSONArray(new String(responseBody));
         JSONAssert.assertEquals(expected, data, false);
+    }
+
+    /* Tests if the /ship/owner/{owner name} endpoint returns empty array when wrong owner is given. */
+    @Test
+    public void shipsByOwnerReturnsEmptyArray() throws Exception {
+
+        String owner = "OOCL Line";
+
+        byte[] responseBody = webTestClient.get().uri("/ships/owner/" + owner)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBody()
+                .jsonPath("$").isArray()
+                .returnResult()
+                .getResponseBody();
+
+        JSONAssert.assertEquals("[]", new String(responseBody), false);
     }
 
     /* Tests if the /ships/{id} endpoint returns the correct ship information. */
@@ -112,17 +123,7 @@ public class ShipsApplicationTests {
                 .returnResult()
                 .getResponseBody();
 
-        JSONObject expected = null;
-
-        // finding the ship with the given id
-        for (int i = 0; i < allShips.length(); i++) {
-            JSONObject ship = allShips.getJSONObject(i);
-            if (ship.getInt("id") == shipId) {
-                expected = ship;
-                break;
-            }
-        }
-
+        JSONObject expected = findJsonShipById(allShips, shipId);
         JSONObject data = new JSONObject(new String(responseBody));
         JSONAssert.assertEquals(expected, data, false);
     }
@@ -140,4 +141,3 @@ public class ShipsApplicationTests {
     }
 
 }
-
