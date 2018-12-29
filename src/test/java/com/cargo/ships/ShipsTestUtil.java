@@ -8,6 +8,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides useful static methods for filtering and finding ships in
+ * both serialized and deserialized forms.
+ *
+ * @author Stoimen Stoimenov
+ */
 class ShipsTestUtil {
 
     static Ship[] filterShipsByOwner(Ship[] ships, String owner) {

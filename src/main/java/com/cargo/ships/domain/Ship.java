@@ -2,6 +2,8 @@ package com.cargo.ships.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import java.util.Objects;
+
 /**
  * This class represents a POJO containing
  * all available information for a given ship.
@@ -121,6 +123,26 @@ public class Ship {
 
     public void setGrossTonnage(String grossTonnage) {
         this.grossTonnage = grossTonnage;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ship ship = (Ship) o;
+        return id == ship.id &&
+                built == ship.built &&
+                Float.compare(ship.lengthMeters, lengthMeters) == 0 &&
+                Float.compare(ship.beamMeters, beamMeters) == 0 &&
+                maxTEU == ship.maxTEU &&
+                Objects.equals(name, ship.name) &&
+                Objects.equals(owner, ship.owner) &&
+                Objects.equals(grossTonnage, ship.grossTonnage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, built, name, lengthMeters, beamMeters, maxTEU, owner, grossTonnage);
     }
 
     @Override
